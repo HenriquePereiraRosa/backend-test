@@ -1,30 +1,36 @@
 package br.com.hq.model;
 
+import java.time.MonthDay;
+// import java.util.Optional;
+
+import br.com.hq.model.util.Category;
+
 public class Payment {
 
-	private String data;
+	private MonthDay data;
 	private String descricao;
 	private String moeda;
-	private String valor;
-	private String categoria;
+	private Float valor;
+	private Category categoria;
 	
 	
-	public Payment(String data, String descricao, 
-			String moeda, String valor, String categoria) {
-		this.data = data;
+	public Payment(MonthDay monthDay, String descricao, 
+			String moeda, Float valor, String categoria) {
+		this.data = monthDay;
 		this.descricao = descricao;
 		this.moeda = moeda;
 		this.valor = valor;
-		this.categoria = categoria;
+		this.setCategoria(this.chooseCategory(categoria));
 	}
 
 
-	public String getData() {
+	public MonthDay getData() {
 		return data;
+		
 	}
 
 
-	public void setData(String data) {
+	public void setData(MonthDay data) {
 		this.data = data;
 	}
 
@@ -49,24 +55,63 @@ public class Payment {
 	}
 
 
-	public String getValor() {
+	public Float getValor() {
 		return valor;
 	}
 
 
-	public void setValor(String valor) {
+	public void setValor(Float valor) {
 		this.valor = valor;
 	}
 
 
-	public String getCategoria() {
+	public Category getCategoria() {
 		return categoria;
 	}
 
 
-	public void setCategoria(String categoria) {
+	public void setCategoria(Category categoria) {
 		this.categoria = categoria;
 	}
+	
+
+	public Category chooseCategory(String categoria) {
+		
+		categoria = categoria.replace(" ", "").toLowerCase();
+		
+		if(!categoria.isEmpty() && categoria != null) {
+			if(categoria.contains(Category.diversao.getName())) {
+				return Category.diversao;
+			}
+			
+			if(categoria.contains(Category.viagem.getName())) {
+				return Category.viagem;
+			}
+			
+			if(categoria.contains(Category.transporte.getName())) {
+				return Category.transporte;
+			}
+			
+			if(categoria.contains(Category.hospedagem.getName())) {
+				return Category.hospedagem;
+			}
+			
+			if(categoria.contains(Category.alimentacao.getName())) {
+				return Category.alimentacao;
+			}
+			
+			if(categoria.contains(Category.vestuario.getName())) {
+				return Category.vestuario;
+			}
+			
+			if(categoria.contains(Category.higiene.getName())) {
+				return Category.higiene;
+			}
+		}
+		
+		return Category.desconhecido;
+	}
+
 
 	
 }
