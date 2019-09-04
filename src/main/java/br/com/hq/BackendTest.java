@@ -60,6 +60,17 @@ public class BackendTest {
 				payList.add(pay);
 			}
 			
+
+			// TODO: to remove (DEBUG)
+			System.out.println("++++++++++++++++++++++++++++++++++++++");
+			payList.forEach(p -> {
+				System.out.print(p.getDescricao());
+				System.out.print(" | ");
+				System.out.print(p.getValor());
+				System.out.print(" | ");
+				System.out.println(p.getData());
+			});
+			
 		} catch (JsonSyntaxException e) {
 			System.out.println("Error merging Json to Object!");
 			e.printStackTrace();

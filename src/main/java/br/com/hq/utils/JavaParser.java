@@ -11,6 +11,6 @@ public class JavaParser {
 
 	public MonthDay parseData(String data) {
 		data = data.replace(" ", "").toLowerCase().replace("mai", "mar");
-		return MonthDay.parse(data, DateTimeFormatter.ofPattern("dd/MM"));
+		return MonthDay.parse(data, DateTimeFormatter.ofPattern("dd/MMM"));
 	}
 }
