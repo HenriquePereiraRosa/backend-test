@@ -1,6 +1,7 @@
 package br.com.hq.model;
 
-public class ReceiptString {
+public class OperatorStr {
+
 	private String data;
 	private String descricao;
 	private String moeda;
@@ -8,8 +9,8 @@ public class ReceiptString {
 	private String categoria;
 	
 	
-	public ReceiptString(String data, String descricao, 
-			String moeda, String valor, String categoria) {
+	public OperatorStr(String data, String descricao,
+					   String moeda, String valor, String categoria) {
 		this.data = data;
 		this.descricao = descricao;
 		this.moeda = moeda;
@@ -66,5 +67,6 @@ public class ReceiptString {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
+
 	
 }

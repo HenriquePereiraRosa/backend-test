@@ -5,7 +5,7 @@ import java.time.MonthDay;
 
 import br.com.hq.model.util.Category;
 
-public class Payment {
+public class Operation {
 
 	private MonthDay data;
 	private String descricao;
@@ -14,8 +14,8 @@ public class Payment {
 	private Category categoria;
 	
 	
-	public Payment(MonthDay monthDay, String descricao, 
-			String moeda, Float valor, String categoria) {
+	public Operation(MonthDay monthDay, String descricao,
+					 String moeda, Float valor, String categoria) {
 		this.data = monthDay;
 		this.descricao = descricao;
 		this.moeda = moeda;
@@ -77,38 +77,46 @@ public class Payment {
 
 	public Category chooseCategory(String categoria) {
 		
-		categoria = categoria.replace(" ", "").toLowerCase();
-		
-		if(!categoria.isEmpty() && categoria != null) {
-			if(categoria.contains(Category.diversao.getName())) {
-				return Category.diversao;
-			}
-			
-			if(categoria.contains(Category.viagem.getName())) {
-				return Category.viagem;
-			}
-			
-			if(categoria.contains(Category.transporte.getName())) {
-				return Category.transporte;
-			}
-			
-			if(categoria.contains(Category.hospedagem.getName())) {
-				return Category.hospedagem;
-			}
-			
-			if(categoria.contains(Category.alimentacao.getName())) {
-				return Category.alimentacao;
-			}
-			
-			if(categoria.contains(Category.vestuario.getName())) {
-				return Category.vestuario;
-			}
-			
-			if(categoria.contains(Category.higiene.getName())) {
-				return Category.higiene;
-			}
+		try {
+			categoria.isEmpty();
+		} catch (NullPointerException e) {
+			System.out.println("Categoria nula");
+			return Category.desconhecido;
 		}
-		
+
+		categoria = categoria
+				.replace(" ", "").replace("ã", "a")
+				.replace("ç", "c")
+				.replace("é", "e")
+				.toLowerCase();
+
+		if(categoria.contains(Category.diversao.getName())) {
+			return Category.diversao;
+		}
+
+		if(categoria.contains(Category.viagem.getName())) {
+			return Category.viagem;
+		}
+
+		if(categoria.contains(Category.transporte.getName())) {
+			return Category.transporte;
+		}
+
+		if(categoria.contains(Category.hospedagem.getName())) {
+			return Category.hospedagem;
+		}
+
+		if(categoria.contains(Category.alimentacao.getName())) {
+			return Category.alimentacao;
+		}
+
+		if(categoria.contains(Category.vestuario.getName())) {
+			return Category.vestuario;
+		}
+
+		if(categoria.contains(Category.higiene.getName())) {
+			return Category.higiene;
+		}
 		return Category.desconhecido;
 	}
 

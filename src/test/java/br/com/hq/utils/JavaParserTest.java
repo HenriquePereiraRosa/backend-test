@@ -44,9 +44,9 @@ public class JavaParserTest {
 
 		
 
-		assertEquals(MonthDay.of(07, 31), parser.parseData("31/jul"));
-		assertEquals(MonthDay.of(07, 31), parser.parseData("31/ jul"));
-		assertEquals(MonthDay.of(07, 31), parser.parseData(" 31/ jul "));		
+		assertEquals(MonthDay.of(07, 31), parser.parseData("31/jul", '/'));
+		assertEquals(MonthDay.of(07, 31), parser.parseData("31/ jul", '/'));
+		assertEquals(MonthDay.of(07, 31), parser.parseData(" 31/ jul ", '/'));
 	}
 
 }
