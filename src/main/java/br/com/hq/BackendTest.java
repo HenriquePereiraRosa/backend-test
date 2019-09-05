@@ -7,6 +7,7 @@ import br.com.hq.utils.JavaParser;
 import com.google.gson.*;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,8 +25,10 @@ public class BackendTest {
 
 	public static void main(String[] args) {
 
-		String fileName = "C:\\dev\\training\\employeeTest\\ItauBackendTest\\backend-test\\src\\main\\java\\br\\com\\hq\\resource\\data.log";
-		List<Operation> fileList;
+		//String fileName = "C:\\dev\\training\\employeeTest\\ItauBackendTest\\backend-test\\src\\main\\java\\br\\com\\hq\\resource\\data.log";
+		String fileName = BackendTest.class.getResource("data.log").toString();
+		URL url = BackendTest.class.getResource("data.log");
+		List<Operation> fileList = new ArrayList<>();
 
 		HttpUtil http = new HttpUtil();
 		List<Operation> payList = new ArrayList<>();
@@ -77,15 +80,18 @@ public class BackendTest {
 
 		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 
-			stream.forEach(line -> System.out.println(line.substring(0, 6)));
-			//list.forEach(e -> fileList.add(new Operation(parser.parseData(e.substring()))));
+			stream.forEach(line -> {
+				System.out.println(line.substring(0, 6));
+				if(!line.toLowerCase().contains("data")) {
+					fileList.add(parser.getOperation(line));
+				}
+			});
+
+			fileList.forEach(System.out::println);
 
 		} catch (IOException e) {
 			System.out.println(" Arquivo não pode ser aberto.");
 			e.printStackTrace();
 		}
-
-
 	}
-
 }

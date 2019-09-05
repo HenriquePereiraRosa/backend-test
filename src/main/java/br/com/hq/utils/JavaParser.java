@@ -54,4 +54,8 @@ public class JavaParser {
 		}
 		return list;
 	}
+
+	public Operation getOperation(String line) {
+		return null;
+	}
 }

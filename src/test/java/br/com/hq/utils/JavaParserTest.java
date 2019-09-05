@@ -2,7 +2,9 @@ package br.com.hq.utils;
 
 import static org.junit.Assert.*;
 
+import java.time.DateTimeException;
 import java.time.MonthDay;
+import java.time.format.DateTimeParseException;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,6 +49,8 @@ public class JavaParserTest {
 		assertEquals(MonthDay.of(07, 31), parser.parseData("31/jul", '/'));
 		assertEquals(MonthDay.of(07, 31), parser.parseData("31/ jul", '/'));
 		assertEquals(MonthDay.of(07, 31), parser.parseData(" 31/ jul ", '/'));
+		assertEquals(MonthDay.of(07, 31), parser.parseData(" 31_ jul ", '_'));
+		assertEquals(MonthDay.of(07, 31), parser.parseData(" 31. jul ", '.'));
 	}
 
 }
