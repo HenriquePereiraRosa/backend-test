@@ -6,12 +6,14 @@ import br.com.hq.utils.HttpUtil;
 import br.com.hq.utils.JavaParser;
 import com.google.gson.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,9 +27,9 @@ public class BackendTest {
 
 	public static void main(String[] args) {
 
-		//String fileName = "C:\\dev\\training\\employeeTest\\ItauBackendTest\\backend-test\\src\\main\\java\\br\\com\\hq\\resource\\data.log";
-		String fileName = BackendTest.class.getResource("data.log").toString();
-		URL url = BackendTest.class.getResource("data.log");
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Digite o caminho do arquivo: ");
+		String fileName = scan.next();
 		List<Operation> fileList = new ArrayList<>();
 
 		HttpUtil http = new HttpUtil();
@@ -80,12 +82,13 @@ public class BackendTest {
 
 		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 
-			stream.forEach(line -> {
+            stream.forEach(line -> {
 				System.out.println(line.substring(0, 6));
 				if(!line.toLowerCase().contains("data")) {
 					fileList.add(parser.getOperation(line));
 				}
 			});
+            stream.close();
 
 			fileList.forEach(System.out::println);
 

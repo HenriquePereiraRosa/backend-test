@@ -15,8 +15,8 @@ import java.util.Locale;
 
 public class JavaParser {
 	
-	public Float parseFloat(String json) {
-		return Float.parseFloat(json.replace(",", ".").replace(" ", ""));
+	public Float parseFloat(String str) {
+		return Float.parseFloat(str.replace(",", ".").replace(" ", ""));
 	}
 
 	public MonthDay parseData(String data, char separator) {
@@ -34,8 +34,8 @@ public class JavaParser {
 				.replace("set", "sep")
 				.replace("out", "oct")
 				.replace("dez", "dec")
-				.toUpperCase(),
-				formatter);		
+				.toUpperCase(), // TODO: check upperCase() need.
+				formatter);
 	}
 
 	public List<Operation> jsonToList(JsonArray jsArr) {
@@ -56,6 +56,33 @@ public class JavaParser {
 	}
 
 	public Operation getOperation(String line) {
-		return null;
+		MonthDay md = parseData(line.substring(0, 6), '-');
+
+		Boolean descDone = false;
+		StringBuffer descricao = new StringBuffer();
+		Boolean valorDone = false;
+		StringBuffer valor = new StringBuffer();
+		StringBuffer categoria = new StringBuffer();
+
+		for(int i = 6; i < line.length(); i++) {
+
+			char charIndex = line.charAt(i);
+
+			if((Character.isLetter(charIndex)  || (charIndex == '-') || (charIndex == '.') || (charIndex == ','))
+					&& (charIndex != '-') && !descDone) { // descricao block
+				descricao.append(charIndex);
+			} else if((Character.isDigit(charIndex) || (charIndex == '-') || (charIndex == ',') || (charIndex == '.'))
+					&& !valorDone) { // valor block
+				descDone = true;
+				valor.append(charIndex);
+			} else if(Character.isLetter(charIndex)) {
+				valorDone = true;
+				categoria.append(charIndex);
+			}
+		}
+
+		return new Operation(md, descricao.toString(),
+				"R$", Float.parseFloat(valor.toString()),
+				categoria.toString());
 	}
 }

@@ -17,18 +17,16 @@ public class Operation {
 	public Operation(MonthDay monthDay, String descricao,
 					 String moeda, Float valor, String categoria) {
 		this.data = monthDay;
-		this.descricao = descricao;
-		this.moeda = moeda;
+		this.descricao = descricao.trim();
+		this.moeda = moeda.trim();
 		this.valor = valor;
-		this.setCategoria(this.chooseCategory(categoria));
+		this.setCategoria(this.chooseCategory(categoria.trim()));
 	}
-
 
 	public MonthDay getData() {
 		return data;
 		
 	}
-
 
 	public void setData(MonthDay data) {
 		this.data = data;
