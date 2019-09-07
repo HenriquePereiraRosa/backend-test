@@ -16,11 +16,11 @@ public class Operation {
 	
 	public Operation(MonthDay monthDay, String descricao,
 					 String moeda, Float valor, String categoria) {
-		this.data = monthDay;
-		this.descricao = descricao.trim();
-		this.moeda = moeda.trim();
-		this.valor = valor;
-		this.setCategoria(this.chooseCategory(categoria.trim()));
+		this.data = (monthDay != null) ? monthDay : MonthDay.of(0, 0);
+		this.descricao = (descricao != null) ? descricao.trim() : null;
+		this.moeda = (moeda != null) ? moeda.trim() : moeda;
+		this.valor = (valor != null) ? valor : Float.valueOf(0);
+		this.setCategoria(this.chooseCategory(categoria));
 	}
 
 	public MonthDay getData() {
@@ -75,9 +75,7 @@ public class Operation {
 
 	public Category chooseCategory(String categoria) {
 		
-		try {
-			categoria.isEmpty();
-		} catch (NullPointerException e) {
+		if(categoria == null) {
 			System.out.println("Categoria nula");
 			return Category.desconhecido;
 		}
@@ -86,7 +84,8 @@ public class Operation {
 				.replace(" ", "").replace("ã", "a")
 				.replace("ç", "c")
 				.replace("é", "e")
-				.toLowerCase();
+				.toLowerCase()
+                .trim();
 
 		if(categoria.contains(Category.diversao.getName())) {
 			return Category.diversao;
@@ -118,6 +117,14 @@ public class Operation {
 		return Category.desconhecido;
 	}
 
-
-	
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "data=" + data +
+                ", descricao='" + descricao + '\'' +
+                ", moeda='" + moeda + '\'' +
+                ", valor=" + valor +
+                ", categoria=" + categoria +
+                '}';
+    }
 }

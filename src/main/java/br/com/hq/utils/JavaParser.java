@@ -16,7 +16,8 @@ import java.util.Locale;
 public class JavaParser {
 	
 	public Float parseFloat(String str) {
-		return Float.parseFloat(str.replace(",", ".").replace(" ", ""));
+	    if(str == null) return new Float(0);
+		return Float.parseFloat(str.replace(".", "").replace(",", ".").replace(" ", ""));
 	}
 
 	public MonthDay parseData(String data, char separator) {
@@ -68,10 +69,17 @@ public class JavaParser {
 
 			char charIndex = line.charAt(i);
 
-			if((Character.isLetter(charIndex)  || (charIndex == '-') || (charIndex == '.') || (charIndex == ','))
+			if((Character.isLetter(charIndex)
+					|| (charIndex == ' ')
+					|| (charIndex == '-')
+					|| (charIndex == '.')
+					|| (charIndex == ','))
 					&& (charIndex != '-') && !descDone) { // descricao block
 				descricao.append(charIndex);
-			} else if((Character.isDigit(charIndex) || (charIndex == '-') || (charIndex == ',') || (charIndex == '.'))
+			} else if((Character.isDigit(charIndex)
+					|| (charIndex == '-')
+					|| (charIndex == ',')
+					|| (charIndex == '.'))
 					&& !valorDone) { // valor block
 				descDone = true;
 				valor.append(charIndex);
@@ -81,8 +89,16 @@ public class JavaParser {
 			}
 		}
 
-		return new Operation(md, descricao.toString(),
-				"R$", Float.parseFloat(valor.toString()),
+		// TODO: DEBUG
+		Operation op = new Operation(md, descricao.toString(),
+				"R$", parseFloat(valor.toString()),
 				categoria.toString());
+		System.out.println(op.toString());
+
+		return op;
+
+		/*return new Operation(md, descricao.toString(),
+				"R$", parseFloat(valor.toString()),
+				categoria.toString());*/
 	}
 }
