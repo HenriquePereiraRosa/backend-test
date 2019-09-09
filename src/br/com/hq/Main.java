@@ -68,23 +68,23 @@ public class Main {
             e.printStackTrace();
         }
 
-//        try (BufferedReader br = Files.newBufferedReader(Paths.get(fileName))) {
-//
-//            //br returns as stream and convert it into a List
-//            List<String> list = br.lines().collect(Collectors.toList());
-//            list.forEach(line -> {
-//                if (!line.toLowerCase().contains("data")) {
-//                    opList.add(parser.getOperation(line));
-//                }
-//            });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        opList.sort(Comparator.comparing(br.com.hq.model.Operation::getData));
-
-        // TODO: DEBUG
+        // Dados ordenados por data
         System.out.println(" - Arquivos ordenados por DATA:");
+        opList.sort(Comparator.comparing(br.com.hq.model.Operation::getData));
         opList.forEach(System.out::println);
+
+        // Gastos por categoria
+
+
+        // Categoria de maior gasto
+
+        // Mês de maior gasto
+
+        // Gasto Total
+
+        // Receita total
+
+        // Saldo
+
     }
 }
