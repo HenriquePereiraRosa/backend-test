@@ -1,8 +1,8 @@
 package br.com.hq.utils;
 
+import br.com.hq.utils.JavaParser;
 import org.junit.*;
 
-import java.time.MonthDay;
 import java.time.format.DateTimeParseException;
 
 import static org.junit.Assert.assertEquals;

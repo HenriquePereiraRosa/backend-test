@@ -1,16 +1,11 @@
 package br.com.hq.utils;
 
-import static org.junit.Assert.*;
 
-import java.time.DateTimeException;
+import org.junit.*;
+
 import java.time.MonthDay;
-import java.time.format.DateTimeParseException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class JavaParserTest {
 
@@ -36,14 +31,15 @@ public class JavaParserTest {
 
 	@Test
 	public void test() {
-		assertEquals(140.00, parser.parseFloat("140.00"), 0.0001);
-		assertEquals(140.00, parser.parseFloat(" 140. 00"), 0.0001);
-		assertEquals(140.00, parser.parseFloat(" 140.00 "), 0.0001);
-		assertEquals(-140.00, parser.parseFloat("-140.00"), 0.0001);
-		assertEquals(140.00, parser.parseFloat("14 0.00 "), 0.0001);
-		assertEquals(140.00, parser.parseFloat("14 0.00"), 0.0001);
+		assertEquals(140.00, parser.parseFloat("140,00"), 0.0001);
+		assertEquals(140.00, parser.parseFloat(" 140, 00"), 0.0001);
+		assertEquals(140.00, parser.parseFloat(" 140,00 "), 0.0001);
+		assertEquals(-140.00, parser.parseFloat("-140,00"), 0.0001);
+		assertEquals(140.00, parser.parseFloat("14 0,00 "), 0.0001);
+		assertEquals(140.00, parser.parseFloat("14 0,00"), 0.0001);
 		assertEquals(140.00, parser.parseFloat("1 40,00"), 0.0001);
-
+		assertEquals(1040.00, parser.parseFloat("1. 040,00"), 0.0001);
+		assertEquals(1040.00, parser.parseFloat("1 040,00"), 0.0001);
 		
 
 		assertEquals(MonthDay.of(07, 31), parser.parseData("31/jul", '/'));

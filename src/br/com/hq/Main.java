@@ -1,6 +1,7 @@
 package br.com.hq;
 
 import br.com.hq.model.Operation;
+import br.com.hq.model.Summary;
 import br.com.hq.utils.HttpUtil;
 import br.com.hq.utils.JavaParser;
 import com.google.gson.JsonArray;
@@ -10,13 +11,11 @@ import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -26,14 +25,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String fileName;
         HttpUtil http = new HttpUtil();
         List<Operation> opList = new ArrayList<>();
         JsonArray jsArray;
         JavaParser parser = new JavaParser();
 
-        System.out.print("Buscando dados do servidor...");
+        // Backend server data consulting
         try {
+            System.out.print("Buscando dados do servidor...");
             StringBuffer buffer = new StringBuffer(http.sendGet(DB_URL));
             jsArray = new JsonParser().parse(buffer.toString()).getAsJsonObject()
                     .getAsJsonArray("pagamentos");
@@ -49,9 +48,10 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("Incluindo dados do arquivo .log...");
+        // File reading
         try {
             URI uri = ClassLoader.getSystemClassLoader().getResource(LOG).toURI();
+            System.out.println("Incluindo dados de:");
             System.out.println(uri.toString());
 
             Files.lines(Paths.get(uri)).forEach(line -> {
@@ -68,23 +68,38 @@ public class Main {
             e.printStackTrace();
         }
 
+        // Exit app in case of void list
+        if(opList == null || opList.size() == 0){
+            System.out.println("Não constam transações. Programa será finalizado.");
+            System.exit(-1);
+        }
+
         // Dados ordenados por data
-        System.out.println(" - Arquivos ordenados por DATA:");
-        opList.sort(Comparator.comparing(br.com.hq.model.Operation::getData));
+        System.out.println(" - Extrato ordenados por DATA:");
+        opList.sort(Comparator.comparing(Operation::getData));
         opList.forEach(System.out::println);
 
-        // Gastos por categoria
+        Summary summary = new Summary(opList);
+        System.out.println();
+        System.out.println("----====== RESUMO DAS TRANSAÇÕES =====----");
 
+        // Gastos por categoria
+        System.out.println("Gastos por categoria:");
+        System.out.println(summary.getGastosPorCategoria());
 
         // Categoria de maior gasto
+        System.out.println("Categoria de maior gasto: " + summary.getCategoriaMaiorGasto());
 
         // Mês de maior gasto
+        System.out.println("Mês de maior gasto: " + summary.getMesMaiorGasto());
 
         // Gasto Total
+        System.out.println("Gasto total: " + summary.getGastoTotal());
 
         // Receita total
+        System.out.println("Receita total: " + summary.getReceitaTotal());
 
         // Saldo
-
+        System.out.println("Saldo: " + summary.getSaldo());
     }
 }
