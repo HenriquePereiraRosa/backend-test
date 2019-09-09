@@ -118,12 +118,11 @@ public class Operation {
 
     @Override
     public String toString() {
-        return "Operation{" +
+        return /*"Operation{"*/ " - " +
                 "data=" + data +
                 ", descricao='" + descricao + '\'' +
                 ", moeda='" + moeda + '\'' +
                 ", valor=" + valor +
-                ", categoria=" + categoria +
-                '}';
+                ", categoria=" + categoria;//+'}';
     }
 }
