@@ -8,7 +8,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -16,12 +18,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Main {
 
     private final static String BACK_URL = "https://my-json-server.typicode.com/cairano/backend-test";
     private final static String DB_URL = BACK_URL + "/db";
     private final static String LOG = "br/com/hq/data.log";
+    //private final static String LOG = "data.log";
 
     public static void main(String[] args) {
 
@@ -49,30 +53,33 @@ public class Main {
         }
 
         // File reading
-        try {
-            URI uri = ClassLoader.getSystemClassLoader().getResource(LOG).toURI();
-            System.out.println("Incluindo dados de:");
-            System.out.println(uri.toString());
+        //            URI uri = ClassLoader.getSystemClassLoader().getResource(LOG).toURI();
+//            System.out.println("Incluindo dados de:");
+//            System.out.println(uri.toString());
+//
+//            Files.lines(Paths.get(uri)).forEach(line -> {
+//                if (!line.toLowerCase().contains("data")) {
+//                    opList.add(parser.getOperation(line));
+//                }
+//            });
+        Stream stream = new BufferedReader(
+                new InputStreamReader(
+                        ClassLoader.getSystemClassLoader().getResourceAsStream(LOG))).lines();
+        System.out.println("Incluindo dados de do arquivo .log");
 
-            Files.lines(Paths.get(uri)).forEach(line -> {
-                if (!line.toLowerCase().contains("data")) {
-                    opList.add(parser.getOperation(line));
-                }
-            });
-            System.out.println("Arquivo carregado com sucesso.");
-        } catch (URISyntaxException e) {
-            System.out.println("Erro no formato do endereço.");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println(" Arquivo não pode ser aberto.");
-            e.printStackTrace();
-        }
+        stream.forEach(line -> {
+            if (!line.toString().toLowerCase().contains("data")) {
+                opList.add(parser.getOperation(line.toString()));
+            }});
+        System.out.println("Arquivo carregado com sucesso.");
 
         // Exit app in case of void list
         if(opList == null || opList.size() == 0){
             System.out.println("Não constam transações. Programa será finalizado.");
             System.exit(-1);
         }
+
+        // =============== Start point of Data Presentation ===============
 
         // Dados ordenados por data
         System.out.println();
@@ -82,7 +89,7 @@ public class Main {
 
         Summary summary = new Summary(opList);
         System.out.println();
-        System.out.println("----====== RESUMO DAS TRANSAÇÕES =====----");
+        System.out.println("----====== RESUMO DAS TRANSAÇOES =====----");
 
         // Gastos por categoria
         System.out.println("Gastos por categoria:");
@@ -97,7 +104,7 @@ public class Main {
 
         // Optional: Month list
         System.out.println();
-        System.out.println("Lista gastos por Mês:");
+        System.out.println("Lista gastos por mês:");
         System.out.println(summary.getGastosPorMesToString());
 
         // Mês de maior gasto
