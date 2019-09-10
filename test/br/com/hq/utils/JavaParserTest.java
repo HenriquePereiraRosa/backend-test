@@ -40,6 +40,8 @@ public class JavaParserTest {
 		assertEquals(140.00, parser.parseFloat("1 40,00"), 0.0001);
 		assertEquals(1040.00, parser.parseFloat("1. 040,00"), 0.0001);
 		assertEquals(1040.00, parser.parseFloat("1 040,00"), 0.0001);
+		assertEquals(-1040.00, parser.parseFloat("-1 040,00"), 0.0001);
+		assertEquals(-1.00000000376832E14, parser.parseFloat("-100 .00 0..0 00.000.040,00"), 0.01);
 		
 
 		assertEquals(MonthDay.of(07, 31), parser.parseData("31/jul", '/'));

@@ -85,13 +85,13 @@ public class Main {
 
         // Gastos por categoria
         System.out.println("Gastos por categoria:");
-        System.out.println(summary.getGastosPorCategoria());
+        System.out.println(summary.getGastosPorCategoriaToString());
 
         // Categoria de maior gasto
-        System.out.println("Categoria de maior gasto: " + summary.getCategoriaMaiorGasto());
+        System.out.println("Categoria com maior gasto: " + summary.getCategoriaMaiorGasto());
 
         // Mês de maior gasto
-        System.out.println("Mês de maior gasto: " + summary.getMesMaiorGasto());
+        System.out.println("Mês com maior gasto: " + summary.getMesMaiorGasto());
 
         // Gasto Total
         System.out.println("Gasto total: " + summary.getGastoTotal());

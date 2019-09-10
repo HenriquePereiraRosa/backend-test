@@ -3,7 +3,6 @@ package br.com.hq.model;
 import br.com.hq.model.util.Category;
 
 import java.time.Month;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +24,12 @@ public class Summary {
         this.gastoTotal = Float.valueOf(0);
         this.receitaTotal = Float.valueOf(0);
         list.forEach(operation -> {
-            if(operation.getValor() > Float.valueOf(0))
-                this.receitaTotal += operation.getValor();
-            else {
-                this.gastoTotal += operation.getValor();
-                this.gastosPorMes.put(operation.getData().getMonth(),
-                        this.gastosPorMes.get(operation.getCategoria())
-                                + operation.getValor());
-                this.gastosPorCategoria.put(operation.getCategoria(),
-                        this.gastosPorCategoria.get(operation.getCategoria())
-                                + operation.getValor());
+            Float valor = operation.getValor();
+            if(valor > Float.valueOf(0))  // It's income?
+                this.receitaTotal += valor;
+            else { // No it's spent.
+                this.gastoTotal += valor;
+                this.addEmGastosPorMesECategoria(operation);
             }
         });
 
@@ -55,6 +50,22 @@ public class Summary {
         });
 
         this.saldo = this.receitaTotal + this.gastoTotal;
+    }
+
+    private void addEmGastosPorMesECategoria(Operation operation) {
+
+        Month month = operation.getData().getMonth();
+        Category categoria = operation.getCategoria();
+        Float valor = operation.getValor();
+
+        this.gastosPorMes.put(month,
+                (this.gastosPorMes.containsKey(month)) ?
+                        (this.gastosPorMes.get(month) + valor)
+                        : valor);
+        this.gastosPorCategoria.put(categoria,
+                (this.gastosPorCategoria.containsKey(categoria)) ?
+                        (this.gastosPorCategoria.get(categoria) + valor)
+                        : valor);
     }
 
 
@@ -82,6 +93,14 @@ public class Summary {
 
     public Map<Category, Float> getGastosPorCategoria() {
         return gastosPorCategoria;
+    }
+
+    public String getGastosPorCategoriaToString() {
+
+        StringBuffer buffer = new StringBuffer();
+        gastosPorCategoria.forEach((c, v) ->
+                buffer.append(" - " + c.getName() + ": " + v + "\n"));
+        return buffer.toString();
     }
 
     public void setGastosPorCategoria(Map<Category, Float> gastosPorCategoria) {

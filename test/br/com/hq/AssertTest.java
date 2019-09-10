@@ -22,8 +22,6 @@ import java.util.*;
 
 public class AssertTest {
 
-	private final static String BACK_URL = "https://my-json-server.typicode.com/cairano/backend-test";
-	private final static String DB_URL = BACK_URL + "/db";
 	private final static String LOG = "br/com/hq/data.log";
 
 	@Test
@@ -272,20 +270,20 @@ public class AssertTest {
 		System.out.println("Saldo: " + summary.getSaldo());
 
 		Map<Category, Float> map = new HashMap<>();
-		map.put(Category.transporte, Float.valueOf("-4.16"));
-		map.put(Category.desconhecido, Float.valueOf("-69.99"));
-		map.put(Category.diversao, Float.valueOf("-10.9"));
-		map.put(Category.vestuario, Float.valueOf("-16.65"));
-		map.put(Category.higiene, Float.valueOf("-12.5"));
-		map.put(Category.hospedagem, Float.valueOf("-143.15"));
+		map.put(Category.alimentacao, Float.valueOf("-537.31"));
 		map.put(Category.viagem, Float.valueOf("-430.49"));
-		map.put(Category.alimentacao, Float.valueOf("-9.96"));
+		map.put(Category.diversao, Float.valueOf("-262.22998"));
+		map.put(Category.vestuario, Float.valueOf("-317.92"));
+		map.put(Category.hospedagem, Float.valueOf("-1912.19"));
+		map.put(Category.higiene, Float.valueOf("-40.57"));
+		map.put(Category.desconhecido, Float.valueOf("-283.25"));
+		map.put(Category.transporte, Float.valueOf("-1080.84"));
 
 		Assert.assertEquals(map, summary.getGastosPorCategoria());
-		Assert.assertEquals(Category.viagem, summary.getCategoriaMaiorGasto());
-		Assert.assertEquals(Month.of(2), summary.getMesMaiorGasto());
-		Assert.assertEquals(Float.valueOf("-4864.7993"), summary.getGastoTotal());
-		Assert.assertEquals(Float.valueOf("1043.25"), summary.getReceitaTotal());
-		Assert.assertEquals(Float.valueOf("-3821.5493"), summary.getSaldo());
+		Assert.assertEquals(Category.hospedagem, summary.getCategoriaMaiorGasto());
+		Assert.assertEquals(Month.of(5), summary.getMesMaiorGasto());
+		Assert.assertEquals(Float.valueOf("-4864.7993"), summary.getGastoTotal(), 0.01);
+		Assert.assertEquals(Float.valueOf("1043.25"), summary.getReceitaTotal(), 0.01);
+		Assert.assertEquals(Float.valueOf("-3821.5493"), summary.getSaldo(), 0.01);
 	}
 }
