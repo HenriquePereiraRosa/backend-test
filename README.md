@@ -1,29 +1,31 @@
+<h1 align="center">BACKEND TEST</h1>
+
 <p align="center">
  <img src="https://i.imgur.com/kNWsCCC.gif?1" alt="Backend Test"></a>
 </p>
 
-<h3 align="center">Backend Test</h3>
 
 <div align="center">
   
   [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-  [![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/HenriquePereiraRosa/backend-test/issues)
-  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/HenriquePereiraRosa/backend-test/pulls)
+  [![GitHub Issues](https://img.shields.io/github/issues/henriquepereirarosa/backend-test.svg)](https://github.com/HenriquePereiraRosa/backend-test/issues)
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/henriquepereirarosa/backend-test.svg)](https://github.com/HenriquePereiraRosa/backend-test/pulls)
   [![License](https://img.shields.io/badge/license-CC0-blue.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
     
 </div>
 
 ---
 
-<p align = "center">💡 Various templates & tips on writing high-quality documentation that people want to read.</p>
+<p align = "center">💡 See the explanation below.</p>
 
 
 ## Table of Contents
 
-- [Conceito de desenvolvimento deste projeto](#why_document)
-- [Best Practices](#best_practices)
-- [Templates](#templates)
-- The Art of Technical Writing
+- [Conceito de desenvolvimento deste projeto](#concept)
+- [Primeira fase](#first)
+- [Segunda fase](#second)
+- [Terceira fase](#third)
+- [Testes jUnit](#tests)
   - [Novice Technical Writers](https://www.writethedocs.org/guide/#new-to-caring-about-documentation)
   - [Experienced Technical Writers](https://www.writethedocs.org/guide/#experienced-documentarian)
   - [API Documentation](https://www.writethedocs.org/guide/#api-documentation)
@@ -35,31 +37,89 @@
 - [Acknowledgements](#acknowledgements)
 
 
-## Why must you document your project? <a name = "why_document"></a>
+## Conceito de desenvolvimento deste projeto <a name = "concept"></a>
 
-- It doesn’t matter how good your software is, because if the documentation is not good enough, people will not use it.
-Even if for some reason they have to use it, without good documentation, they won’t use it effectively or the way you’d like them to
-- THE MAJORITY OF PEOPLE GLANCE AND LEAVE. Make it pretty so that it's easier for them to star before they leave. The more stars you have, the likelier it is that serious developers will use your repo
-- You will be using your code in 6 months. Code that you wrote 6 months ago is often indistinguishable from code that someone else has written
-- You want people to use your code because you think that others might find it useful. However, people need to understand why your code might be useful for them, before they decide to use it
-- You want people to help out. If you don’t have documentation, you will miss out on a whole class of contributors
-- You want to be a better writer
+- Utilizando os padrões de projeto java 8 e através do problema proposto foram dividas 3 taferas principais: 
+ 1. Aquisição dos dados (Backend server e arquivo .log).(#first)
+ 2. Merge dos dados.(#second)
+ 3. Processamento e classificação dos dados.(#third)
+
+ 	E por fim foram concluídos os testes que foram implementados durante a implementação do projeto utilizando técnicas TDD.(#tests)
 
 
-## Best Practices<a name = "best_practices"></a>
+## Primeira fase<a name = "first"></a>
 
-**Things to remember:**
+**Conexão com o servidor e conversão do Json:**
 
-- Keep a lighthearted friendly tone. Treat the reader as someone who doesn't have a lot of knowledge about the topic but is very interested
-- Keep things brief
-- Use headings frequently. This breaks things up when reading and often it is good for linking to specific information
-- Link to other places in the documentation often but only for additional information. Readers should not have to navigate through several pages to find information regarding one specific thing. Just inline the immediately relevant information and link off if they want to know more
-- Use as many code snippets, CLI, etc. examples as possible. Show the reader what you mean
-- Gently introduce a guide before diving into technical details. This gives context and readers are more likely to stay engaged longer
-- It is always good to describe the functionality of the various files in your project
-- Always use gender-neutral pronouns. A gender-neutral pronoun is a pronoun which does not associate a gender with the individual who is being discussed. For eg. - using 'they' instead of 'he/she'
+- A classe **HttpURLCOnnection** foi a responsável pelas requisições HTTP ao servidor.
+- Para produção da string foi utiliza a classe **StringBuffer** por possui uma melhor performance.
+- A biblioteca **Gson** Efetuou a conversão de JSON para ArrayListLink.
 
-**Things you should avoid:**
+- A classe **JavaParser (referencia. como parser)** foi criada com o objetivo de converser JsonArray para ArrayList<Operation>.
+````
+		// Backend server data consulting
+        try {
+            System.out.print("Buscando dados do servidor...");
+            StringBuffer buffer = new StringBuffer(http.sendGet(DB_URL));
+            jsArray = new JsonParser().parse(buffer.toString()).getAsJsonObject()
+                    .getAsJsonArray("pagamentos");
+            jsArray.addAll(new JsonParser().parse(buffer.toString()).getAsJsonObject()
+                    .getAsJsonArray("recebimentos"));
+
+            opList.addAll(parser.jsonToList(jsArray));
+
+        } catch (JsonSyntaxException e) {
+            System.out.println("Erro ao converter Json para objeto Java!");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+````
+
+
+## Segunda fase<a name = "second"></a>
+
+**Leitura do arquivo e junção com os dados retidos do servidor:**
+
+- A nova classe **Files** do java 8 foi a responsável pela leitura do arquivo que foi adquirido como resource ao projeto.
+- Para produção da string foi utiliza a classe **StringBuffer** por possui uma melhor performance.
+- A biblioteca **Gson** Efetuou a conversão de JSON para ArrayListLink.
+
+- A classe **JavaParser (referencia. como parser)** foi criada com o objetivo de converser JsonArray para ArrayList<Operation>.  
+````
+		// File reading
+        try {
+            URI uri = ClassLoader.getSystemClassLoader().getResource(LOG).toURI();
+            System.out.println("Incluindo dados de:");
+            System.out.println(uri.toString());
+
+            Files.lines(Paths.get(uri)).forEach(line -> {
+                if (!line.toLowerCase().contains("data")) {
+                    opList.add(parser.getOperation(line));
+                }
+            });
+            System.out.println("Arquivo carregado com sucesso.");
+        } catch (URISyntaxException e) {
+            System.out.println("Erro no formato do endereço.");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println(" Arquivo não pode ser aberto.");
+            e.printStackTrace();
+        }
+````
+ 
+ - houve também a inclusasão de uma saída de emergência caso haja algum erro com o arquivo & o servidor esteja indisponível.
+ ````
+ 		// Exit app in case of void list
+        if(opList == null || opList.size() == 0){
+            System.out.println("Não constam transações. Programa será finalizado.");
+            System.exit(-1);
+        }
+````
+
+## Terceira fase<a name = "third"></a>
+
+**Interface de apresentação dos dados**
 
 - Don't assume prior knowledge about the topic. If you want to appeal to a large audience, then you are going to have people with very diverse backgrounds
 - Don't use idioms. Write using more formal terms that are well defined. This makes it easier for non-native English speakers and for translations to be written
@@ -115,23 +175,7 @@ Even if for some reason they have to use it, without good documentation, they wo
 2. [documentation-handbook](https://github.com/jamiebuilds/documentation-handbook) - jamiebuilds
 3. [Documentation Guide](https://www.writethedocs.org/guide/) - Write the Docs
 
-
-## P.S. <a name = "ps"></a>
-
-- This repo is under active development. If you have any improvements / suggestions please file an [issue](https://github.com/kylelobo/The-Documentation-Compendium/issues/new/choose) or send in a [Pull Request](/en/CONTRIBUTING.md)
-- The [issues](https://github.com/kylelobo/The-Documentation-Compendium/issues) page is a good place to visit if you want to pick up some task. It has a list of things are to be implemented in the near future
-
-
-<p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#">
-  <a rel="license"
-     href="http://creativecommons.org/publicdomain/zero/1.0/">
-    <img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" />
-  </a>
-  <br />
-  To the extent possible under law,
   <a rel="dct:publisher"
-     href="https://github.com/kylelobo/">
-    <span property="dct:title">Kyle Lobo</span></a>
-  has waived all copyright and related or neighboring rights to
-  <span property="dct:title">The Documentation Compendium</span>.
+     href="https://github.com/henriquepereirarosa/">
+    <span property="dct:title">Henrique P. Rosa</span></a>
 </p>

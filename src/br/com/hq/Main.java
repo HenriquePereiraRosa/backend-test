@@ -75,7 +75,8 @@ public class Main {
         }
 
         // Dados ordenados por data
-        System.out.println(" - Extrato ordenados por DATA:");
+        System.out.println();
+        System.out.println(" - Extrato ordenado por DATA:");
         opList.sort(Comparator.comparing(Operation::getData));
         opList.forEach(System.out::println);
 
@@ -88,10 +89,25 @@ public class Main {
         System.out.println(summary.getGastosPorCategoriaToString());
 
         // Categoria de maior gasto
-        System.out.println("Categoria com maior gasto: " + summary.getCategoriaMaiorGasto());
+        System.out.println("Categoria com maior gasto: "
+                + summary.getCategoriaMaiorGasto()
+                + " (" + summary.getGastosPorCategoria()
+                    .get(summary.getCategoriaMaiorGasto())
+                + ")");
+
+        // Optional: Month list
+        System.out.println();
+        System.out.println("Lista gastos por Mês:");
+        System.out.println(summary.getGastosPorMesToString());
 
         // Mês de maior gasto
-        System.out.println("Mês com maior gasto: " + summary.getMesMaiorGasto());
+        System.out.println("Mês com maior gasto: "
+                + summary.getMesMaiorGasto()
+                + " (" + summary.getGastosPorMes()
+                    .get(summary.getMesMaiorGasto())
+                + ")");
+
+        System.out.println();
 
         // Gasto Total
         System.out.println("Gasto total: " + summary.getGastoTotal());

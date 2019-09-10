@@ -3,9 +3,7 @@ package br.com.hq.model;
 import br.com.hq.model.util.Category;
 
 import java.time.Month;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Summary {
     private Float aux;
@@ -19,8 +17,8 @@ public class Summary {
 
     public Summary(List<Operation> list) {
 
-        this.gastosPorMes = new HashMap<>();
-        this.gastosPorCategoria = new HashMap<>();
+        this.gastosPorMes = new LinkedHashMap<>();
+        this.gastosPorCategoria = new LinkedHashMap<>();
         this.gastoTotal = Float.valueOf(0);
         this.receitaTotal = Float.valueOf(0);
         list.forEach(operation -> {
@@ -32,22 +30,11 @@ public class Summary {
                 this.addEmGastosPorMesECategoria(operation);
             }
         });
+        this.gastosPorCategoria
+                = this.sortCategoryByValue(this.gastosPorCategoria);
 
-        this.aux = Float.valueOf(0);
-        this.gastosPorCategoria.forEach((c, v) -> {
-            if(v < this.aux) {
-                this.aux = v;
-                this.categoriaMaiorGasto = c;
-            }
-        });
-
-        this.aux = Float.valueOf(0);
-        this.gastosPorMes.forEach((m, v) -> {
-            if(v < this.aux) {
-                this.aux = v;
-                this.mesMaiorGasto = m;
-            }
-        });
+        this.gastosPorMes
+                = this.sortMesByValue(this.gastosPorMes);
 
         this.saldo = this.receitaTotal + this.gastoTotal;
     }
@@ -68,6 +55,46 @@ public class Summary {
                         : valor);
     }
 
+    private void setMaxValueInCategoria(Map<Category, Float> map) {
+        this.aux = Float.valueOf(0);
+        map.forEach((c, v) -> {
+            if(v < this.aux) {
+                this.aux = v;
+                this.categoriaMaiorGasto = c;
+            }
+        });
+    }
+
+    private void setMaxValueInMes(Map<Month, Float> map) {
+        this.aux = Float.valueOf(0);
+        map.forEach((m, v) -> {
+            if(v < this.aux) {
+                this.aux = v;
+                this.mesMaiorGasto = m;
+            }
+        });
+    }
+
+    private Map<Category, Float> sortCategoryByValue(Map<Category, Float> map) {
+
+        Map<Category, Float> result = new LinkedHashMap<>();
+        map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
+        this.categoriaMaiorGasto = (Category) result.keySet().toArray()[0];
+        return result;
+    }
+
+    private Map<Month, Float> sortMesByValue(Map<Month, Float> map) {
+
+        Map<Month, Float> result = new LinkedHashMap<>();
+        map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
+        this.mesMaiorGasto = (Month) result.keySet().toArray()[0];
+        return result;
+    }
+
 
     public Month getMesMaiorGasto() {
         return mesMaiorGasto;
@@ -85,6 +112,14 @@ public class Summary {
 
     public Map<Month, Float> getGastosPorMes() {
         return gastosPorMes;
+    }
+
+    public String getGastosPorMesToString() {
+
+        StringBuffer buffer = new StringBuffer();
+        gastosPorMes.forEach((c, v) ->
+                buffer.append(" - " + c + ": " + v + "\n"));
+        return buffer.toString();
     }
 
     public void setGastosPorMes(Map<Month, Float> gastosPorMes) {
