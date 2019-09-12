@@ -188,7 +188,7 @@
 
 ## Testes no Projeto projeto <a name = "tests"></a>
 
-- Por ser uma classe "Util", a classe ``JavaParser``, contém um especificidade de testes e por esse motivo foi testada em ``test.br.com.hq.utils.JavaParserTest``:
+- Por ser uma classe "Util", a classe ``JavaParser``, contém uma especificidade de testes e por esse motivo foi testada em ``test.br.com.hq.utils.JavaParserTest``:
 ````
 	@Test
 	public void test() {
@@ -213,7 +213,7 @@
 	}
 ```` 
 
-- A classe Main e Summary seriam melhor testdas juntas assim foi criaod um Json "fake" para o teste: 
+- A classe Main e Summary seriam melhor testadas em um cenário que se aproximasse ao cenário real da aplicação, portanto, foi criado um Json com os dados do servidor a fim de simular o estado real da aplicação: 
 
  ````
 @Test
@@ -583,6 +583,12 @@ Receita total: 1043.25
 Saldo: -3821.5498
 
 ````
+
+<div align="center">
+	<p align="center">
+	 	<img src="https://i.imgur.com/23teBLm.gif" alt="That's all folks!"></a>
+	</p>
+</div>
 
 <a rel="dct:publisher"
      href="https://github.com/henriquepereirarosa/">
